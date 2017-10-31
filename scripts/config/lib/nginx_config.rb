@@ -46,7 +46,9 @@ class NginxConfig
     json["https_only"] ||= DEFAULT[:https_only]
 
     json["routes"] ||= {}
-    json["routes"] = NginxConfigUtil.parse_routes(json["routes"], ENV)
+    json["routes"] = NginxConfigUtil.parse_routes(json["routes"]).each do |regex, target| 
+      json["routes"][regex] = NginxConfigUtil.interpolate(target)
+    end
 
     json["redirects"] ||= {}
     json["redirects"].each do |loc, hash|
